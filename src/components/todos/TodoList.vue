@@ -5,6 +5,9 @@ import BaseSpinner from '../ui/BaseSpinner.vue';
 import { ref } from 'vue';
 import SearchTodos from './SearchTodos.vue';
 import AddTodo from './AddTodo.vue';
+
+let loading = ref(false);
+let todos = ref([]);
 </script>
 
 <template>
