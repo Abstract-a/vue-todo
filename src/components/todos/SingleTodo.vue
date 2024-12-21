@@ -1,7 +1,7 @@
 <script setup>
-import DeleteTodoModal from '../modals/DeleteTodoModal.vue';
-import UpdateTodoModal from '../modals/UpdateTodoModal.vue';
-import ShowTodoModal from '../modals/ShowTodoModal.vue';
+import DeleteTodoModal from './modals/DeleteTodoModal.vue';
+import UpdateTodoModal from './modals/UpdateTodoModal.vue';
+import ShowTodoModal from './modals/ShowTodoModal.vue';
 
 import { ref } from 'vue';
 
