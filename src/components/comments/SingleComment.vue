@@ -8,22 +8,44 @@ let editing = ref(false);
 </script>
 
 <template>
-  <div>
-    <div v-if="editing">
-      <textarea id="" v-model="currentComment" required type="text" />
+  <div class="w-full pb-2">
+    <div v-if="editing" class="mx-2 flex w-full rounded-sm bg-gray-400 py-3">
+      <textarea
+        id=""
+        v-model="currentComment"
+        required
+        type="text"
+        class="mx-auto w-[90%] rounded-md border-2 border-gray-900 px-2 text-left text-[13px]"
+      />
     </div>
-    <div v-else>
-      <h3>{{ comment.comment }}</h3>
+    <div v-else class="mx-4 rounded-lg bg-gray-400 p-3">
+      <h3 class="break-words px-2 text-left text-[15px]">
+        {{ comment.comment }}
+      </h3>
     </div>
-    <div>
-      <p>{{ comment.createdAt }}</p>
+    <div class="mx-4 flex items-center justify-start gap-1">
+      <p class="text-xs text-gray-500">{{ comment.createdAt }}</p>
       •
-      <button v-if="editing" type="button" disabled="loading">
+      <button
+        v-if="editing"
+        type="button"
+        disabled="loading"
+        class="font-bold text-green-500 transition-all duration-300 ease-in-out hover:text-green-800 hover:underline"
+      >
         {{ loading ? 'saving...' : 'save' }}
       </button>
-      <button v-if="!editing">Edit</button>
+      <button
+        v-if="!editing"
+        class="text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-800 hover:underline"
+      >
+        Edit
+      </button>
       •
-      <button>Delete</button>
+      <button
+        class="text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-800 hover:underline"
+      >
+        Delete
+      </button>
     </div>
     <DelteCommentModal id="comment._id" />
   </div>
