@@ -1,5 +1,20 @@
 <script setup>
-import TodosView from './views/TodosView.vue';
+import { provide, ref } from 'vue';
+import { RouterView } from 'vue-router';
+import SignoutButton from './components/auth/SignoutButton.vue';
+
+const token = ref(localStorage.getItem('authToken'));
+
+const setToken = (newToken) => {
+  token.value = newToken;
+  if (newToken) {
+    localStorage.setItem('authToken', newToken);
+  } else {
+    localStorage.removeItem('authToken');
+  }
+};
+provide('authToken', token);
+provide('setAuthToken', setToken);
 </script>
 
 <template>
@@ -12,9 +27,9 @@ import TodosView from './views/TodosView.vue';
       to="/"
       >home</RouterLink
     >
-    <div clas="flex">
+    <div class="flex gap-4" v-if="!token">
       <RouterLink
-        class="font-semibold pr-4 tracking-wider transition-all duration-300 ease-in-out hover:opacity-80"
+        class="font-semibold tracking-wider transition-all duration-300 ease-in-out hover:opacity-80"
         to="/signin"
         >Signin</RouterLink
       >
@@ -23,6 +38,13 @@ import TodosView from './views/TodosView.vue';
         to="/signup"
         >Signup</RouterLink
       >
+    </div>
+    <div v-else class="flex gap-4">
+      <RouterLink
+        class="font-semibold tracking-wider transition-all duration-300 ease-in-out hover:opacity-80"
+        to="/signin"
+        ><SignoutButton
+      /></RouterLink>
     </div>
   </nav>
   <RouterView />

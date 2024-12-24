@@ -2,12 +2,40 @@
 import axios from 'axios';
 import SingleTodo from '../todos/SingleTodo.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import SearchTodos from './SearchTodos.vue';
 import AddTodo from './AddTodo.vue';
 
 let loading = ref(false);
 let todos = ref([]);
+let error = ref('');
+const authToken = inject('authToken');
+
+async function getTodos() {
+  let mounted = true;
+  try {
+    loading.value = true;
+    const response = await axios.get(`http://locahost:5000/api/todos`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    if (mounted) {
+      todos.value = response.data;
+    }
+  } catch (err) {
+    if (mounted) {
+      error.value = 'Failed to fetch todos';
+      if (err.response?.status === 401) {
+        // remove token and navigate to signin
+      }
+    }
+  } finally {
+    if (mounted) {
+      loading.value = false;
+    }
+  }
+}
 </script>
 
 <template>

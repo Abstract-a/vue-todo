@@ -1,11 +1,40 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 let email = ref('');
 let name = ref('');
 let password = ref('');
 let success = ref('');
 let error = ref('');
+
+const router = useRouter();
+
+async function signup() {
+  //error.value = '';
+  //success.value = '';
+  try {
+    const response = await axios.post('http://localhost:5000/api/users', {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    });
+    if (response.status === 201) {
+      success.value = 'Registration successful! you can now log in';
+      setTimeout(() => {
+        router.push('/signin');
+      }, 2000);
+    }
+  } catch (err) {
+    console.error(err);
+    if (err.response) {
+      error.value = 'Registration failed';
+    } else {
+      error.value = 'Something went wrong, please try again';
+    }
+  }
+}
 </script>
 
 <template>
@@ -13,7 +42,7 @@ let error = ref('');
     class="mx-auto mt-12 flex h-[calc(100vh-3rem)] w-screen flex-col gap-8 rounded-lg bg-gray-200 pt-40 shadow-lg sm:mt-0 sm:h-[400px] sm:w-[400px] sm:gap-4 sm:pt-0"
   >
     <h1 class="pt-6 text-center text-xl font-bold">Sign up</h1>
-    <form action="" class="flex flex-col gap-8 sm:gap-4">
+    <form @submit.prevent="signup" class="flex flex-col gap-8 sm:gap-4">
       <input
         type="text"
         placeholder="Name"

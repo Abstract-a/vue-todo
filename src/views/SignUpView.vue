@@ -1,5 +1,5 @@
 <script setup>
-import SignUpForm from '../components/auth/SingUpForm.vue';
+import SignUpForm from '../components/auth/SignUpForm.vue';
 </script>
 
 <template>
