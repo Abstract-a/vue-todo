@@ -1,6 +1,6 @@
 <script setup>
-import CommentsPage from '@/components/comments/CommentsPage.vue';
-import { Comment, ref } from 'vue';
+import CommentsPage from '../../comments/CommentsPage.vue';
+import { ref } from 'vue';
 
 let expanded = ref(false);
 let initialTitle = ref('initialTitle');
