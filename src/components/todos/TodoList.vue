@@ -2,7 +2,7 @@
 import axios from 'axios';
 import SingleTodo from '../todos/SingleTodo.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import SearchTodos from './SearchTodos.vue';
 import AddTodo from './AddTodo.vue';
 
@@ -15,27 +15,29 @@ async function getTodos() {
   let mounted = true;
   try {
     loading.value = true;
-    const response = await axios.get(`http://locahost:5000/api/todos`, {
+    const response = await axios.get('http://localhost:5000/api/todos', {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken._value}`,
       },
     });
-    if (mounted) {
-      todos.value = response.data;
-    }
+    //if (mounted) {
+    todos.value = response.data;
+    // }
   } catch (err) {
-    if (mounted) {
-      error.value = 'Failed to fetch todos';
-      if (err.response?.status === 401) {
-        // remove token and navigate to signin
-      }
-    }
+    // if (mounted) {
+    //   error.value = 'Failed to fetch todos';
+    //   if (err.response?.status === 401) {
+    //     // remove token and navigate to signin
+    //   }
+    // }
+    console.log(err);
   } finally {
-    if (mounted) {
-      loading.value = false;
-    }
+    //if (mounted) {
+    loading.value = false;
+    //}
   }
 }
+onMounted(getTodos);
 </script>
 
 <template>

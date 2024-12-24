@@ -4,10 +4,11 @@ import { ref } from 'vue';
 let title = ref('title');
 let text = ref('text');
 let loading = ref(false);
+let show = ref(false);
 </script>
 
 <template>
-  <div>
+  <div v-if="show">
     <div
       class="fixed left-[50%] top-[50%] z-[1000] mt-12 flex h-screen w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 bg-[#d6d6d6] p-5 shadow-md sm:h-auto sm:w-[90%] sm:max-w-[500px] sm:rounded-lg"
     >

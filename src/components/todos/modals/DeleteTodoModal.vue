@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-let show = ref(true);
+let show = ref(false);
 </script>
 <template>
   <div v-if="show">

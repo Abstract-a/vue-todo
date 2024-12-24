@@ -3,6 +3,7 @@ import CommentsPage from '../../comments/CommentsPage.vue';
 import { ref } from 'vue';
 
 let expanded = ref(false);
+let show = ref(false);
 let initialTitle = ref('initialTitle');
 let initialText = ref('initialText');
 let completed = ref(true);
@@ -13,6 +14,7 @@ let completedAt = ref('jan-02-1999');
 
 <template>
   <div
+    v-if="show"
     class="absolute inset-0 flex h-screen w-screen flex-col items-center justify-center bg-gray-500 md:flex-row md:gap-4"
   >
     <div
