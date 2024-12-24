@@ -1,5 +1,8 @@
-<script setup></script>
+<script setup>
+import './index.css';
+import TodoList from './components/todos/TodoList.vue';
+</script>
 
 <template>
-  <div>hello j</div>
+  <TodoList />
 </template>
