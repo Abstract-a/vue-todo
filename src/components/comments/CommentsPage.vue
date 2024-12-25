@@ -2,10 +2,33 @@
 import SingleComment from './SingleComment.vue';
 import AddComment from './AddComment.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
-let loading = ref(true);
-let comments = ref([]);
+const props = defineProps({
+  id: String,
+});
+const loading = ref(false);
+const comments = ref([]);
+const authToken = inject('authToken');
+
+async function getComments() {
+  loading.value = true;
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/comments/${props.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken._value}`,
+        },
+      }
+    );
+    comments.value = response.data;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -18,7 +41,11 @@ let comments = ref([]);
       <div
         class="mt-4 flex h-full w-full flex-col items-start justify-start overflow-auto overflow-x-hidden"
       >
-        <SingleComment v-for="comment in comments" :key="comment._id" comment />
+        <SingleComment
+          v-for="comment in comments"
+          :key="comment._id"
+          :comment="comment"
+        />
       </div>
     </div>
   </div>

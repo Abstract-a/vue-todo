@@ -1,17 +1,51 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted, onBeforeUnmount } from 'vue';
+import axios from 'axios';
 
 const props = defineProps({
-  initialTitle: String,
-  InitialText: String,
-  id: String,
+  todo: Object,
 });
 
-let title = ref(props.initialTitle);
-let text = ref(props.InitialText);
+let title = ref(props.todo.initialTitle);
+let text = ref(props.todo.InitialText);
 let loading = ref(false);
 let show = ref(false);
 const authToken = inject('authToken');
+
+function handleKeyDown(e) {
+  if (e.key === 'Escape') {
+    // oncancel
+  }
+}
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+// Cannot test before adding emit events
+
+async function handleSubmit(e) {
+  loading.value = true;
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/api/todos/${props.todo._id}`,
+      {
+        title: title.value,
+        text: text.value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken._value}`,
+        },
+      }
+    );
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -19,7 +53,7 @@ const authToken = inject('authToken');
     <div
       class="fixed left-[50%] top-[50%] z-[1000] mt-12 flex h-screen w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 bg-[#d6d6d6] p-5 shadow-md sm:h-auto sm:w-[90%] sm:max-w-[500px] sm:rounded-lg"
     >
-      <form>
+      <form @submit.prevent="handleSubmit">
         <label class="text-[20px] font-bold tracking-wider" for="title"
           >Title</label
         >
@@ -48,7 +82,7 @@ const authToken = inject('authToken');
         <button
           class="cursor-pointer rounded-lg border-none bg-green-500 px-6 py-3 text-white transition-all duration-500 ease-in-out hover:bg-green-600 hover:opacity-90"
           type="submit"
-          disabled="loading"
+          :disabled="loading"
         >
           {{ loading ? 'Submitting...' : 'Submit' }}
         </button>

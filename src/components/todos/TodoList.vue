@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import SingleTodo from '../todos/SingleTodo.vue';
+import SingleTodo from './SingleTodo.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
 import { ref, inject, onMounted } from 'vue';
 import SearchTodos from './SearchTodos.vue';

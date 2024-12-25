@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 
 let searchTerm = ref('');
+// function handleInputChange(e) {
+// searchTerm.value = e.target.value
+// }
 </script>
 
 <template>

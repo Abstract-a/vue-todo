@@ -1,15 +1,30 @@
 <script setup>
 import CommentsPage from '../../comments/CommentsPage.vue';
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
+const props = defineProps({
+  // initialTitle: String,
+  // initialText: String,
+  // createdAt: String,
+  // updatedAt: String,
+  // completedAt: String,
+  // isCompleted: String,
+  todo: Object,
+});
 let expanded = ref(false);
-let show = ref(false);
-let initialTitle = ref('initialTitle');
-let initialText = ref('initialText');
-let completed = ref(true);
-let createdAt = ref('jan-02-1999');
-let updatedAt = ref('jan-02-1999');
-let completedAt = ref('jan-02-1999');
+let show = ref(true);
+
+function handleKeyDown(e) {
+  if (e.key === 'Escape') {
+    // onCancel()
+  }
+}
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 </script>
 
 <template>
@@ -34,7 +49,7 @@ let completedAt = ref('jan-02-1999');
           />
         </svg>
       </button>
-      <h3 class="mb-4 mt-8 text-xl font-bold">{{ initialTitle }}</h3>
+      <h3 class="mb-4 mt-8 text-xl font-bold">{{ props.todo.title }}</h3>
       <div
         :class="[
           'mx-auto h-[400px] w-full overflow-y-hidden whitespace-normal break-words',
@@ -47,12 +62,12 @@ let completedAt = ref('jan-02-1999');
             expanded ? '' : 'line-clamp-4',
           ]"
         >
-          {{ initialText }}
+          {{ props.todo.text }}
         </p>
         <span
           :class="[
             'mt-2 inline-block cursor-pointer text-blue-500',
-            initialText.length < 260 ? 'hidden' : '',
+            props.todo.text.length < 260 ? 'hidden' : '',
           ]"
         >
           {{ expanded ? 'Show less' : 'Show more' }}
@@ -61,18 +76,18 @@ let completedAt = ref('jan-02-1999');
       <div class="flex w-full justify-between gap-4">
         <div class="flex flex-col gap-1">
           <p class="text-xs text-gray-500">date of creation</p>
-          <p class="text-xs text-gray-500">{{ createdAt }}</p>
+          <p class="text-xs text-gray-500">{{ props.todo.createdAt }}</p>
         </div>
         <div class="flex flex-col gap-1">
           <p class="text-xs text-gray-500">latest update</p>
-          <p class="text-xs text-gray-500">{{ updatedAt }}</p>
+          <p class="text-xs text-gray-500">{{ props.todo.updatedAt }}</p>
         </div>
-        <div v-if="completed" class="flex flex-col gap-1">
+        <div v-if="Boolean(props.todo.isCompleted)" class="flex flex-col gap-1">
           <p class="text-xs text-gray-500">complete at</p>
-          <p class="text-xs text-gray-500">{{ completedAt }}</p>
+          <p class="text-xs text-gray-500">{{ props.todo.completedAt }}</p>
         </div>
       </div>
     </div>
-    <CommentsPage id="id" />
+    <CommentsPage :id="props.todo._id" />
   </div>
 </template>

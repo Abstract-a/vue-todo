@@ -8,9 +8,6 @@ import axios from 'axios';
 const props = defineProps({
   todo: Object,
 });
-//console.log(props.todo);
-const isCompleted = ref(props.todo.completed);
-const title = ref(props.todo.title);
 const updateDate = ref(props.todo.updatedAt);
 const authToken = inject('authToken');
 
@@ -40,7 +37,7 @@ async function handleCompleted(e) {
       {
         title: props.todo.title,
         text: props.todo.text,
-        completed: !isCompleted,
+        completed: !props.todo.completed,
       },
       {
         headers: {
@@ -49,7 +46,7 @@ async function handleCompleted(e) {
       }
     );
     // setUpdateDate
-    isCompleted.value = !isCompleted.value;
+    props.todo.completed = !props.todo.completed;
     //onCompleted()
   } catch (err) {
     console.error(err);
@@ -67,7 +64,7 @@ async function handleCompleted(e) {
           class="ml-3 cursor-pointer border-none bg-none text-base transition-colors duration-300 ease-in-out hover:text-green-500"
         >
           <svg
-            v-if="isCompleted"
+            v-if="props.todo.completed"
             height="1.5rem"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -93,19 +90,19 @@ async function handleCompleted(e) {
           <h3
             :class="[
               'cursor-pointer text-left text-[14px] font-bold md:text-lg',
-              isCompleted
+              props.todo.completed
                 ? 'italic text-gray-600 line-through opacity-70 transition-all duration-500 ease-in-out hover:text-gray-700 hover:opacity-100'
                 : '',
             ]"
           >
-            {{ title }}
+            {{ props.todo.title }}
           </h3>
         </div>
       </div>
       <div class="flex flex-row gap-1">
         <button
           class="ml-3 cursor-pointer border-none bg-none text-base transition-colors duration-300 ease-in-out hover:text-green-500"
-          disabled="isCompleted"
+          :disabled="props.todo.completed"
         >
           <svg
             height="1.5rem"
@@ -134,19 +131,8 @@ async function handleCompleted(e) {
         </button>
       </div>
     </li>
-    <DeleteTodoModal />
-    <UpdateTodoModal
-      initialTitle="props.todo.title"
-      initialText="props.todo.text"
-      id="props.todo._id"
-    />
-    <ShowTodoModal
-      initialTitle="props.todo.title"
-      initialText="props.todo.text"
-      createdAt="props.todo.createdAt"
-      updatedAt="props.todo.updatedAt"
-      completedAt="updateDate"
-      isCompleted="isCompleted"
-    />
+    <DeleteTodoModal :todo="todo" />
+    <UpdateTodoModal :todo="todo" />
+    <ShowTodoModal :todo="todo" />
   </div>
 </template>
