@@ -10,6 +10,7 @@ const props = defineProps({
 });
 const updateDate = ref(props.todo.updatedAt);
 const authToken = inject('authToken');
+//console.log(authToken);
 
 async function handleDelete() {
   try {

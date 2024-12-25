@@ -12,7 +12,7 @@ const props = defineProps({
   todo: Object,
 });
 let expanded = ref(false);
-let show = ref(true);
+let show = ref(false);
 
 function handleKeyDown(e) {
   if (e.key === 'Escape') {

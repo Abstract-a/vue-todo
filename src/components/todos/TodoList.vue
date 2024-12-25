@@ -10,7 +10,47 @@ let loading = ref(false);
 let todos = ref([]);
 let error = ref('');
 const authToken = inject('authToken');
+const showAddTodo = ref(false);
 
+function handleAddTodo(newTodo) {
+  todos.value.push(newTodo);
+}
+
+function handleDeleteTodo(id) {
+  todos.value.filter((todo) => todo._id !== id);
+}
+
+function handleUpdateTodo(updatedTodo) {
+  todos.value.map((todo) =>
+    todo._id === updatedtodo._id ? updatedTodo : todo
+  );
+}
+
+function sortTodos(todos) {
+  return todos.value.sort((a, b) => {
+    if (a.completed === b.completed) {
+      return 0;
+    }
+    return a.completed ? 1 : -1;
+  });
+}
+
+function handleCompleted(id, newCompletedStatus) {
+  todos.map((todo) =>
+    todo._id === id ? { ...todo, completed: newCompletedStatus } : todo
+  );
+}
+
+function handleSeach(searchTerm) {
+  const lowercasedTerm = searchTerm.toLowerCase();
+  todos.value.filter((todo) =>
+    todo.title.toLowerCase().includes(lowercasedTerm)
+  );
+}
+
+function onCancel() {
+  showAddTodo.value = false;
+}
 async function getTodos() {
   try {
     loading.value = true;
@@ -39,15 +79,29 @@ onMounted(() => getTodos());
       <div class="flex items-center justify-between pb-4">
         <SearchTodos />
         <button
+          @click="
+            () => {
+              showAddTodo = !showAddTodo;
+            }
+          "
           class="cursor-pointer rounded-md border-none bg-green-500 px-6 py-3 text-base text-white transition-all duration-500 ease-in-out hover:bg-green-600 md:mr-0"
         >
           Add
         </button>
       </div>
       <ul class="m-0 list-none p-0">
-        <SingleTodo v-for="todo in todos" :key="todo._id" :todo="todo" />
+        <SingleTodo
+          v-for="todo in todos"
+          :key="todo._id"
+          :todo="todo"
+          v-on:delete-todo="handleDeleteTodo"
+        />
       </ul>
-      <AddTodo />
+      <AddTodo
+        :onShow="showAddTodo"
+        v-on:add-todo="handleAddTodo"
+        v-on:cancel="onCancel"
+      />
     </div>
   </div>
 </template>

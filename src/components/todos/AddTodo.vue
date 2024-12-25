@@ -2,12 +2,17 @@
 import { ref, onMounted, onBeforeUnmount, inject } from 'vue';
 import axios from 'axios';
 
+const props = defineProps({
+  onShow: Boolean,
+  onAddTodo: Function,
+});
+
 const loading = ref(false);
 const title = ref('');
 const text = ref('');
-const show = ref(false);
 
 const authToken = inject('authToken');
+const emit = defineEmits(['addTodo', 'cancel']);
 
 async function handleSubmit() {
   loading.value = true;
@@ -24,8 +29,10 @@ async function handleSubmit() {
         },
       }
     );
+    emit('addTodo', response.data);
     title.value = '';
     text.value = '';
+    emit('cancel');
   } catch (err) {
     console.error(err);
   } finally {
@@ -47,7 +54,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="show">
+  <div v-if="onShow">
     <div
       class="confirm-popup fixed left-[50%] top-[50%] z-[1000] flex w-[90%] max-w-[500px] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-lg bg-gray-200 p-5 shadow-md"
     >
@@ -68,6 +75,8 @@ onBeforeUnmount(() => {
           class="mb-3 min-h-80 w-full resize-none overflow-auto rounded-md border border-gray-100 p-3"
         />
         <button
+          @click="$emit('cancel')"
+          type="button"
           class="mr-3 cursor-pointer rounded-lg border-none bg-red-500 px-6 py-3 text-white transition-all duration-500 ease-in-out hover:bg-red-600 hover:opacity-90"
         >
           Cancel
