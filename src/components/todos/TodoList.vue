@@ -12,7 +12,6 @@ let error = ref('');
 const authToken = inject('authToken');
 
 async function getTodos() {
-  let mounted = true;
   try {
     loading.value = true;
     const response = await axios.get('http://localhost:5000/api/todos', {
@@ -20,24 +19,15 @@ async function getTodos() {
         Authorization: `Bearer ${authToken._value}`,
       },
     });
-    //if (mounted) {
     todos.value = response.data;
-    // }
   } catch (err) {
-    // if (mounted) {
-    //   error.value = 'Failed to fetch todos';
-    //   if (err.response?.status === 401) {
-    //     // remove token and navigate to signin
-    //   }
-    // }
+    error.value = 'Failed to fetch todos';
     console.log(err);
   } finally {
-    //if (mounted) {
     loading.value = false;
-    //}
   }
 }
-onMounted(getTodos);
+onMounted(() => getTodos());
 </script>
 
 <template>
@@ -54,9 +44,9 @@ onMounted(getTodos);
           Add
         </button>
       </div>
-      <u class="m-0 list-none p-0">
-        <SingleTodo v-for="todo in todos" :key="todo._id" todo />
-      </u>
+      <ul class="m-0 list-none p-0">
+        <SingleTodo v-for="todo in todos" :key="todo._id" :todo="todo" />
+      </ul>
       <AddTodo />
     </div>
   </div>

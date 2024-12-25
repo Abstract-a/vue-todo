@@ -2,11 +2,14 @@
 import DeleteTodoModal from './modals/DeleteTodoModal.vue';
 import UpdateTodoModal from './modals/UpdateTodoModal.vue';
 import ShowTodoModal from './modals/ShowTodoModal.vue';
-
 import { ref } from 'vue';
 
-let isCompleted = ref(true);
-let title = ref('title');
+const props = defineProps({
+  todo: Object,
+});
+console.log(props.todo);
+let isCompleted = ref(props.todo.completed);
+let title = ref(props.todo.title);
 </script>
 
 <template>
@@ -26,7 +29,7 @@ let title = ref('title');
           >
             >
             <path
-              d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"
+              d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-352a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"
             />
           </svg>
           <svg
@@ -37,7 +40,7 @@ let title = ref('title');
           >
             >
             <path
-              d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-352a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"
+              d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"
             />
           </svg>
         </button>
