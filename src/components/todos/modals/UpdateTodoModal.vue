@@ -1,10 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
-let title = ref('title');
-let text = ref('text');
+const props = defineProps({
+  initialTitle: String,
+  InitialText: String,
+  id: String,
+});
+
+let title = ref(props.initialTitle);
+let text = ref(props.InitialText);
 let loading = ref(false);
 let show = ref(false);
+const authToken = inject('authToken');
 </script>
 
 <template>

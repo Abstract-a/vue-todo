@@ -2,14 +2,59 @@
 import DeleteTodoModal from './modals/DeleteTodoModal.vue';
 import UpdateTodoModal from './modals/UpdateTodoModal.vue';
 import ShowTodoModal from './modals/ShowTodoModal.vue';
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
+import axios from 'axios';
 
 const props = defineProps({
   todo: Object,
 });
-console.log(props.todo);
-let isCompleted = ref(props.todo.completed);
-let title = ref(props.todo.title);
+//console.log(props.todo);
+const isCompleted = ref(props.todo.completed);
+const title = ref(props.todo.title);
+const updateDate = ref(props.todo.updatedAt);
+const authToken = inject('authToken');
+
+async function handleDelete() {
+  try {
+    const response = await axios.delete(
+      `http://localhost:5000/api/todos/${props.todo._id}`,
+      {
+        headers: {
+          Autorization: `Bearer ${authToken._value}`,
+        },
+      }
+    );
+    // ondeletetodo(response.data.id)
+  } catch (err) {
+    console.error(err);
+  } finally {
+    // showconfirm delete to false
+  }
+}
+
+async function handleCompleted(e) {
+  e.stopPropagation();
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/api/todos/${props.todo._id}`,
+      {
+        title: props.todo.title,
+        text: props.todo.text,
+        completed: !isCompleted,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken._value}`,
+        },
+      }
+    );
+    // setUpdateDate
+    isCompleted.value = !isCompleted.value;
+    //onCompleted()
+  } catch (err) {
+    console.error(err);
+  }
+}
 </script>
 
 <template>
@@ -90,7 +135,18 @@ let title = ref(props.todo.title);
       </div>
     </li>
     <DeleteTodoModal />
-    <UpdateTodoModal />
-    <ShowTodoModal />
+    <UpdateTodoModal
+      initialTitle="props.todo.title"
+      initialText="props.todo.text"
+      id="props.todo._id"
+    />
+    <ShowTodoModal
+      initialTitle="props.todo.title"
+      initialText="props.todo.text"
+      createdAt="props.todo.createdAt"
+      updatedAt="props.todo.updatedAt"
+      completedAt="updateDate"
+      isCompleted="isCompleted"
+    />
   </div>
 </template>

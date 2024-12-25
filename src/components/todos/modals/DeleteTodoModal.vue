@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 
 let show = ref(false);
+const props = defineProps({
+  _id: String,
+});
 </script>
 <template>
   <div v-if="show">
