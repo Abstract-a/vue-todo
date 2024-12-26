@@ -34,6 +34,10 @@ async function getComments() {
 function handleAddComment(newComment) {
   comments.value.push(newComment);
 }
+
+function handleDeleteComment(id) {
+  comments.value = comments.value.filter((comment) => comment._id != props.id);
+}
 onMounted(() => getComments());
 </script>
 
@@ -51,6 +55,7 @@ onMounted(() => getComments());
           v-for="comment in comments"
           :key="comment._id"
           :comment="comment"
+          v-on:delete-comment="handleDeleteComment"
         />
       </div>
     </div>

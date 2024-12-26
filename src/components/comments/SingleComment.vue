@@ -1,32 +1,40 @@
 <script setup>
 import axios from 'axios';
-import DelteCommentModal from './modals/DeleteCommentModal.vue';
+import DeleteCommentModal from './modals/DeleteCommentModal.vue';
 import { ref, inject } from 'vue';
 const props = defineProps({
   comment: Object,
 });
 let commentProp = ref([]);
 let currentComment = ref(commentProp.comment);
+const showDeletePopup = ref(false);
 let loading = ref(false);
 let editing = ref(false);
 const authToken = inject('authToken');
+const emit = defineEmits(['deleteComment']);
 
 async function handleDelete() {
+  console.log(props.comment);
   try {
     const response = await axios.delete(
-      `http://localhost:5000/api/comments/${comment.comment._id}`,
+      `http://localhost:5000/api/comments/${props.comment._id}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken._value}`,
         },
       }
     );
     // ondeletecomment
+    emit('deleteComment', response.data.id);
   } catch (err) {
     console.error(err);
   } finally {
     //showconfirmdelete
+    showDeletePopup.value = false;
   }
+}
+function handleCancel() {
+  showDeletePopup.value = false;
 }
 
 async function handleSubmit() {
@@ -86,11 +94,17 @@ async function handleSubmit() {
       </button>
       •
       <button
+        @click="showDeletePopup = true"
         class="text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-800 hover:underline"
       >
         Delete
       </button>
     </div>
-    <DelteCommentModal id="props.comment.comment._id" />
+    <DeleteCommentModal
+      :id="props.comment.comment._id"
+      :onShow="showDeletePopup"
+      v-on:confirm="handleDelete"
+      v-on:cancel="handleCancel"
+    />
   </div>
 </template>
