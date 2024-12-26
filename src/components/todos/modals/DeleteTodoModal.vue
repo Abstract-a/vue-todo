@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, inject, onBeforeUnmount } from 'vue';
 
-let show = ref(false);
+const emit = defineEmits(['cancel', 'confirm']);
 const props = defineProps({
   id: String,
   onShow: Boolean,
@@ -9,7 +9,7 @@ const props = defineProps({
 
 function handleKeyDown(e) {
   if (e.key === 'Escape') {
-    //onCancel()
+    emit('cancel');
   }
 }
 onMounted(() => {

@@ -11,10 +11,9 @@ const showDeletePopup = ref(false);
 let loading = ref(false);
 let editing = ref(false);
 const authToken = inject('authToken');
-const emit = defineEmits(['deleteComment']);
+const emit = defineEmits(['deleteComment', 'updateComment']);
 
 async function handleDelete() {
-  console.log(props.comment);
   try {
     const response = await axios.delete(
       `http://localhost:5000/api/comments/${props.comment._id}`,
@@ -24,12 +23,10 @@ async function handleDelete() {
         },
       }
     );
-    // ondeletecomment
     emit('deleteComment', response.data.id);
   } catch (err) {
     console.error(err);
   } finally {
-    //showconfirmdelete
     showDeletePopup.value = false;
   }
 }
@@ -37,20 +34,23 @@ function handleCancel() {
   showDeletePopup.value = false;
 }
 
-async function handleSubmit() {
+async function handleEdit() {
   loading.value = true;
+
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/comments/${comment.comment._id}`,
+      `http://localhost:5000/api/comments/${props.comment._id}`,
+      {
+        comment: props.comment.comment,
+      },
       {
         headers: {
           Authorization: `Bearer ${authToken._value}`,
         },
-      },
-      {
-        comment: props.comment.comment,
       }
     );
+    emit('updateComment', response.data);
+    editing.value = false;
   } catch (err) {
     console.error(err);
   } finally {
@@ -82,12 +82,14 @@ async function handleSubmit() {
         v-if="editing"
         type="button"
         :disabled="loading"
+        @click="handleEdit"
         class="font-bold text-green-500 transition-all duration-300 ease-in-out hover:text-green-800 hover:underline"
       >
         {{ loading ? 'saving...' : 'save' }}
       </button>
       <button
         v-if="!editing"
+        @click="editing = true"
         class="text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-800 hover:underline"
       >
         Edit
@@ -101,7 +103,6 @@ async function handleSubmit() {
       </button>
     </div>
     <DeleteCommentModal
-      :id="props.comment.comment._id"
       :onShow="showDeletePopup"
       v-on:confirm="handleDelete"
       v-on:cancel="handleCancel"

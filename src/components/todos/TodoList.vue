@@ -13,10 +13,7 @@ let error = ref('');
 const authToken = inject('authToken');
 const showAddTodo = ref(false);
 
-provide('deleteTodo', handleDeleteTodo);
-
 function handleAddTodo(newTodo) {
-  //todos.value.push(newTodo);
   filteredTodos.value.push(newTodo);
 }
 
@@ -104,6 +101,7 @@ onMounted(() => getTodos());
           :key="todo._id"
           :todo="todo"
           v-on:delete-todo="handleDeleteTodo"
+          v-on:update-todo="handleUpdateTodo"
         />
       </ul>
       <AddTodo

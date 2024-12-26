@@ -9,7 +9,7 @@ const props = defineProps({
 
 let loading = ref(false);
 const authToken = inject('authToken');
-const emit = defineEmits(['cancel']);
+const emit = defineEmits(['cancel', 'updateTodo']);
 
 function handleKeyDown(e) {
   if (e.key === 'Escape') {
@@ -38,6 +38,8 @@ async function handleSubmit(e) {
         },
       }
     );
+    emit('updateTodo', response.data);
+    emit('cancel');
   } catch (err) {
     console.error(err);
   } finally {

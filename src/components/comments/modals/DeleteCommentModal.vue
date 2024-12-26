@@ -2,11 +2,8 @@
 import { ref } from 'vue';
 
 const props = defineProps({
-  id: String,
   onShow: Boolean,
 });
-
-let show = ref(false);
 </script>
 
 <template>

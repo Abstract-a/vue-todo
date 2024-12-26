@@ -14,8 +14,7 @@ const authToken = inject('authToken');
 
 async function handleSubmit() {
   loading.value = true;
-  // console.log(props.id);
-  // console.log(comment.value);
+
   try {
     const response = await axios.post(
       `http://localhost:5000/api/comments`,
@@ -29,7 +28,6 @@ async function handleSubmit() {
         },
       }
     );
-    // console.log(response.data);
     emit('addComment', response.data);
     comment.value = '';
   } catch (err) {

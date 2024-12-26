@@ -35,8 +35,14 @@ function handleAddComment(newComment) {
   comments.value.push(newComment);
 }
 
+function handleUpdateComment(updatedComment) {
+  comments.value.map((comment) =>
+    comment._id === updatedComment._id ? updatedComment : comment
+  );
+}
+
 function handleDeleteComment(id) {
-  comments.value = comments.value.filter((comment) => comment._id != props.id);
+  comments.value = comments.value.filter((comment) => comment._id !== id);
 }
 onMounted(() => getComments());
 </script>
@@ -56,6 +62,7 @@ onMounted(() => getComments());
           :key="comment._id"
           :comment="comment"
           v-on:delete-comment="handleDeleteComment"
+          v-on:update-comment="handleUpdateComment"
         />
       </div>
     </div>

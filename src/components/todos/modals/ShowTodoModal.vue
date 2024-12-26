@@ -6,12 +6,13 @@ const props = defineProps({
   onShow: Boolean,
   todo: Object,
 });
+const emit = defineEmits(['cancel']);
+
 let expanded = ref(false);
-let show = ref(false);
 
 function handleKeyDown(e) {
   if (e.key === 'Escape') {
-    // onCancel()
+    emit('cancel');
   }
 }
 onMounted(() => {
