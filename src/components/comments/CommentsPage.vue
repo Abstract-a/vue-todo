@@ -2,7 +2,8 @@
 import SingleComment from './SingleComment.vue';
 import AddComment from './AddComment.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
-import { ref, inject } from 'vue';
+import axios from 'axios';
+import { ref, inject, onMounted } from 'vue';
 
 const props = defineProps({
   id: String,
@@ -29,6 +30,11 @@ async function getComments() {
     loading.value = false;
   }
 }
+
+function handleAddComment(newComment) {
+  comments.value.push(newComment);
+}
+onMounted(() => getComments());
 </script>
 
 <template>
@@ -37,7 +43,7 @@ async function getComments() {
   >
     <BaseSpinner v-if="loading" />
     <div v-else class="flex h-full w-full flex-col items-start justify-center">
-      <AddComment />
+      <AddComment v-on:add-comment="handleAddComment" :id="props.id" />
       <div
         class="mt-4 flex h-full w-full flex-col items-start justify-start overflow-auto overflow-x-hidden"
       >

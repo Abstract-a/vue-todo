@@ -5,7 +5,6 @@ import { ref, inject } from 'vue';
 const props = defineProps({
   comment: Object,
 });
-console.log(props.comment);
 let commentProp = ref([]);
 let currentComment = ref(commentProp.comment);
 let loading = ref(false);

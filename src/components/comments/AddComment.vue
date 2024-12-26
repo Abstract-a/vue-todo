@@ -5,13 +5,17 @@ import axios from 'axios';
 const props = defineProps({
   id: String,
 });
+const emit = defineEmits(['addComment']);
 
 let loading = ref(false);
 let comment = ref('');
 const authToken = inject('authToken');
+// console.log(authToken._value);
 
-async function handleSumit() {
+async function handleSubmit() {
   loading.value = true;
+  // console.log(props.id);
+  // console.log(comment.value);
   try {
     const response = await axios.post(
       `http://localhost:5000/api/comments`,
@@ -25,6 +29,8 @@ async function handleSumit() {
         },
       }
     );
+    // console.log(response.data);
+    emit('addComment', response.data);
     comment.value = '';
   } catch (err) {
     console.error(err);

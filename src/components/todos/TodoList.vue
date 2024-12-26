@@ -32,7 +32,6 @@ function handleUpdateTodo(updatedTodo) {
 }
 
 function sortTodos(todos) {
-  console.log(todos);
   if (todos.length) {
     return todos.value.sort((a, b) => {
       if (a.completed === b.completed) {
@@ -70,7 +69,6 @@ async function getTodos() {
     });
     todos.value = response.data;
     filteredTodos.value = response.data;
-    console.log(filteredTodos.value[0]);
   } catch (err) {
     error.value = 'Failed to fetch todos';
     console.log(err);

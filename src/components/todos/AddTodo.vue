@@ -40,8 +40,8 @@ async function handleSubmit() {
 }
 
 function handleKeyDown(e) {
-  if (e.key === 'escape') {
-    // onCancel
+  if (e.key === 'Escape') {
+    emit('cancel');
   }
 }
 onMounted(() => {
@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="onShow">
+  <div v-if="onShow" @click.self="$emit('cancel')" class="backdrop">
     <div
       class="confirm-popup fixed left-[50%] top-[50%] z-[1000] flex w-[90%] max-w-[500px] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-lg bg-gray-200 p-5 shadow-md"
     >
