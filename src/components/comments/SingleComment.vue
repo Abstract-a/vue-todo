@@ -30,9 +30,6 @@ async function handleDelete() {
     showDeletePopup.value = false;
   }
 }
-function handleCancel() {
-  showDeletePopup.value = false;
-}
 
 async function handleEdit() {
   loading.value = true;
@@ -103,9 +100,9 @@ async function handleEdit() {
       </button>
     </div>
     <DeleteCommentModal
-      :onShow="showDeletePopup"
-      v-on:confirm="handleDelete"
-      v-on:cancel="handleCancel"
+      v-if="showDeletePopup"
+      @confirm="handleDelete"
+      @cancel="showDeletePopup = false"
     />
   </div>
 </template>

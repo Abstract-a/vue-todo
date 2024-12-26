@@ -3,7 +3,7 @@ import SingleComment from './SingleComment.vue';
 import AddComment from './AddComment.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
 import axios from 'axios';
-import { ref, inject, onMounted } from 'vue';
+import { ref, inject, onMounted, computed } from 'vue';
 
 const props = defineProps({
   id: String,
@@ -12,6 +12,11 @@ const loading = ref(false);
 const comments = ref([]);
 const authToken = inject('authToken');
 
+const sortedComments = computed(() => {
+  return comments.value.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+});
 async function getComments() {
   loading.value = true;
   try {
@@ -53,16 +58,16 @@ onMounted(() => getComments());
   >
     <BaseSpinner v-if="loading" />
     <div v-else class="flex h-full w-full flex-col items-start justify-center">
-      <AddComment v-on:add-comment="handleAddComment" :id="props.id" />
+      <AddComment @add-comment="handleAddComment" :id="props.id" />
       <div
         class="mt-4 flex h-full w-full flex-col items-start justify-start overflow-auto overflow-x-hidden"
       >
         <SingleComment
-          v-for="comment in comments"
+          v-for="comment in sortedComments"
           :key="comment._id"
           :comment="comment"
-          v-on:delete-comment="handleDeleteComment"
-          v-on:update-comment="handleUpdateComment"
+          @delete-comment="handleDeleteComment"
+          @update-comment="handleUpdateComment"
         />
       </div>
     </div>

@@ -2,7 +2,7 @@
 import axios from 'axios';
 import SingleTodo from './SingleTodo.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
-import { ref, inject, provide, onMounted } from 'vue';
+import { ref, inject, provide, onMounted, computed } from 'vue';
 import SearchTodos from './SearchTodos.vue';
 import AddTodo from './AddTodo.vue';
 
@@ -13,6 +13,17 @@ let error = ref('');
 const authToken = inject('authToken');
 const showAddTodo = ref(false);
 
+const sortedTodos = computed(() => {
+  // return filteredTodos.value.sort((a, b) => {
+  //   if (a.completed === b.completed) {
+  //     return 0;
+  //   }
+  //   return a.completed ? 1 : -1;
+  // });
+  return filteredTodos.value.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+});
 function handleAddTodo(newTodo) {
   filteredTodos.value.push(newTodo);
 }
@@ -26,18 +37,6 @@ function handleUpdateTodo(updatedTodo) {
   todos.value.map((todo) =>
     todo._id === updatedTodo._id ? updatedTodo : todo
   );
-}
-
-function sortTodos(todos) {
-  if (todos.length) {
-    return todos.value.sort((a, b) => {
-      if (a.completed === b.completed) {
-        return 0;
-      }
-      return a.completed ? 1 : -1;
-    });
-  }
-  return todos;
 }
 
 function handleCompleted(id, newCompletedStatus) {
@@ -83,7 +82,7 @@ onMounted(() => getTodos());
     <BaseSpinner v-if="loading" />
     <div v-else>
       <div class="flex items-center justify-between pb-4">
-        <SearchTodos v-on:search="handleSearch" />
+        <SearchTodos @search="handleSearch" />
         <button
           @click="
             () => {
@@ -97,17 +96,17 @@ onMounted(() => getTodos());
       </div>
       <ul class="m-0 list-none p-0">
         <SingleTodo
-          v-for="todo in filteredTodos"
+          v-for="todo in sortedTodos"
           :key="todo._id"
           :todo="todo"
-          v-on:delete-todo="handleDeleteTodo"
-          v-on:update-todo="handleUpdateTodo"
+          @delete-todo="handleDeleteTodo"
+          @update-todo="handleUpdateTodo"
         />
       </ul>
       <AddTodo
         :onShow="showAddTodo"
-        v-on:add-todo="handleAddTodo"
-        v-on:cancel="onCancel"
+        @add-todo="handleAddTodo"
+        @cancel="onCancel"
       />
     </div>
   </div>

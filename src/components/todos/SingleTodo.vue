@@ -147,20 +147,20 @@ async function handleCompleted(e) {
       </div>
     </li>
     <DeleteTodoModal
-      v-on:cancel="handleCancelDelete"
+      @cancel="handleCancelDelete"
       :onShow="confirmDeletePopup"
       :id="props.todo._id"
-      v-on:confirm="handleDelete"
+      @confirm="handleDelete"
     />
     <UpdateTodoModal
       :todo="todo"
-      v-on:cancel="handleCancelUpdate"
+      @cancel="handleCancelUpdate"
       :onShow="confirmUpdatePopup"
     />
     <ShowTodoModal
       :todo="todo"
       :onShow="confirmShowPopup"
-      v-on:cancel="handleCancelShow"
+      @cancel="handleCancelShow"
     />
   </div>
 </template>
