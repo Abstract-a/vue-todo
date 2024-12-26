@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const props = defineProps({
   onShow: Boolean,
-  onAddTodo: Function,
 });
 
 const loading = ref(false);

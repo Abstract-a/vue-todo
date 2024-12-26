@@ -8,30 +8,40 @@ import axios from 'axios';
 const props = defineProps({
   todo: Object,
 });
+const emit = defineEmits(['deleteTodo']);
 const updateDate = ref(props.todo.updatedAt);
 const authToken = inject('authToken');
-//console.log(authToken);
-
+const confirmDeletePopup = ref(false);
+const confirmShowPopup = ref(false);
+const confirmUpdatePopup = ref(false);
 async function handleDelete() {
   try {
     const response = await axios.delete(
       `http://localhost:5000/api/todos/${props.todo._id}`,
       {
         headers: {
-          Autorization: `Bearer ${authToken._value}`,
+          Authorization: `Bearer ${authToken._value}`,
         },
       }
     );
-    // ondeletetodo(response.data.id)
+    emit('deleteTodo', response.data.id);
   } catch (err) {
     console.error(err);
   } finally {
-    // showconfirm delete to false
+    confirmDeletePopup.value = false;
   }
 }
 
+function handleCancelDelete() {
+  confirmDeletePopup.value = false;
+}
+function handleCancelShow() {
+  confirmShowPopup.value = false;
+}
+function handleCancelUpdate() {
+  confirmUpdatePopup.value = false;
+}
 async function handleCompleted(e) {
-  e.stopPropagation();
   try {
     const response = await axios.put(
       `http://localhost:5000/api/todos/${props.todo._id}`,
@@ -58,11 +68,13 @@ async function handleCompleted(e) {
 <template>
   <div class="m-auto">
     <li
+      @click.self="confirmShowPopup = true"
       class="mb-3 flex cursor-pointer items-center justify-between rounded-md bg-slate-100 p-4 shadow-md"
     >
       <div class="flex gap-3">
         <button
           class="ml-3 cursor-pointer border-none bg-none text-base transition-colors duration-300 ease-in-out hover:text-green-500"
+          @click="handleCompleted"
         >
           <svg
             v-if="props.todo.completed"
@@ -104,6 +116,7 @@ async function handleCompleted(e) {
         <button
           class="ml-3 cursor-pointer border-none bg-none text-base transition-colors duration-300 ease-in-out hover:text-green-500"
           :disabled="props.todo.completed"
+          @click="confirmUpdatePopup = true"
         >
           <svg
             height="1.5rem"
@@ -118,6 +131,7 @@ async function handleCompleted(e) {
         </button>
         <button
           class="ml-3 cursor-pointer border-none bg-none text-base transition-colors duration-300 ease-in-out hover:text-red-600"
+          @click="confirmDeletePopup = true"
         >
           <svg
             height="1.5rem"
@@ -132,8 +146,21 @@ async function handleCompleted(e) {
         </button>
       </div>
     </li>
-    <DeleteTodoModal :todo="todo" />
-    <UpdateTodoModal :todo="todo" />
-    <ShowTodoModal :todo="todo" />
+    <DeleteTodoModal
+      v-on:cancel="handleCancelDelete"
+      :onShow="confirmDeletePopup"
+      :id="props.todo._id"
+      v-on:confirm="handleDelete"
+    />
+    <UpdateTodoModal
+      :todo="todo"
+      v-on:cancel="handleCancelUpdate"
+      :onShow="confirmUpdatePopup"
+    />
+    <ShowTodoModal
+      :todo="todo"
+      :onShow="confirmShowPopup"
+      v-on:cancel="handleCancelShow"
+    />
   </div>
 </template>

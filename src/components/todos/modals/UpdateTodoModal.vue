@@ -4,17 +4,16 @@ import axios from 'axios';
 
 const props = defineProps({
   todo: Object,
+  onShow: Boolean,
 });
 
-let title = ref(props.todo.initialTitle);
-let text = ref(props.todo.InitialText);
 let loading = ref(false);
-let show = ref(false);
 const authToken = inject('authToken');
+const emit = defineEmits(['cancel']);
 
 function handleKeyDown(e) {
   if (e.key === 'Escape') {
-    // oncancel
+    emit('cancel');
   }
 }
 onMounted(() => {
@@ -23,7 +22,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeyDown);
 });
-// Cannot test before adding emit events
 
 async function handleSubmit(e) {
   loading.value = true;
@@ -44,12 +42,13 @@ async function handleSubmit(e) {
     console.error(err);
   } finally {
     loading.value = false;
+    emit('cancel');
   }
 }
 </script>
 
 <template>
-  <div v-if="show">
+  <div v-if="onShow" class="backdrop" @click.self="$emit('cancel')">
     <div
       class="fixed left-[50%] top-[50%] z-[1000] mt-12 flex h-screen w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 bg-[#d6d6d6] p-5 shadow-md sm:h-auto sm:w-[90%] sm:max-w-[500px] sm:rounded-lg"
     >
@@ -61,7 +60,7 @@ async function handleSubmit(e) {
           class="mb-3 w-full rounded-md border border-gray-100 p-3"
           type="text"
           id="title"
-          v-model="title"
+          v-model="props.todo.title"
           required
         />
         <label class="text-[20px] font-bold tracking-wider" for="text"
@@ -70,12 +69,13 @@ async function handleSubmit(e) {
         <textarea
           class="mb-3 min-h-80 w-full resize-none overflow-auto rounded-md border border-gray-100 p-3"
           id="text"
-          v-model="text"
+          v-model="props.todo.text"
           required
         />
         <button
           class="mr-3 cursor-pointer rounded-lg border-none bg-red-500 px-6 py-3 text-white transition-all duration-500 ease-in-out hover:bg-red-600 hover:opacity-90"
           type="button"
+          @click="$emit('cancel')"
         >
           cancel
         </button>

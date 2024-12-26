@@ -2,37 +2,46 @@
 import axios from 'axios';
 import SingleTodo from './SingleTodo.vue';
 import BaseSpinner from '../ui/BaseSpinner.vue';
-import { ref, inject, onMounted } from 'vue';
+import { ref, inject, provide, onMounted } from 'vue';
 import SearchTodos from './SearchTodos.vue';
 import AddTodo from './AddTodo.vue';
 
 let loading = ref(false);
 let todos = ref([]);
+const filteredTodos = ref([]);
 let error = ref('');
 const authToken = inject('authToken');
 const showAddTodo = ref(false);
 
+provide('deleteTodo', handleDeleteTodo);
+
 function handleAddTodo(newTodo) {
-  todos.value.push(newTodo);
+  //todos.value.push(newTodo);
+  filteredTodos.value.push(newTodo);
 }
 
 function handleDeleteTodo(id) {
-  todos.value.filter((todo) => todo._id !== id);
+  todos.value = todos.value.filter((todo) => todo._id !== id);
+  filteredTodos.value = filteredTodos.value.filter((todo) => todo._id !== id);
 }
 
 function handleUpdateTodo(updatedTodo) {
   todos.value.map((todo) =>
-    todo._id === updatedtodo._id ? updatedTodo : todo
+    todo._id === updatedTodo._id ? updatedTodo : todo
   );
 }
 
 function sortTodos(todos) {
-  return todos.value.sort((a, b) => {
-    if (a.completed === b.completed) {
-      return 0;
-    }
-    return a.completed ? 1 : -1;
-  });
+  console.log(todos);
+  if (todos.length) {
+    return todos.value.sort((a, b) => {
+      if (a.completed === b.completed) {
+        return 0;
+      }
+      return a.completed ? 1 : -1;
+    });
+  }
+  return todos;
 }
 
 function handleCompleted(id, newCompletedStatus) {
@@ -41,11 +50,11 @@ function handleCompleted(id, newCompletedStatus) {
   );
 }
 
-function handleSeach(searchTerm) {
+function handleSearch(searchTerm) {
   const lowercasedTerm = searchTerm.toLowerCase();
-  todos.value.filter((todo) =>
-    todo.title.toLowerCase().includes(lowercasedTerm)
-  );
+  filteredTodos.value = todos.value.filter((todo) => {
+    return todo.title.toLowerCase().includes(lowercasedTerm);
+  });
 }
 
 function onCancel() {
@@ -60,6 +69,8 @@ async function getTodos() {
       },
     });
     todos.value = response.data;
+    filteredTodos.value = response.data;
+    console.log(filteredTodos.value[0]);
   } catch (err) {
     error.value = 'Failed to fetch todos';
     console.log(err);
@@ -77,7 +88,7 @@ onMounted(() => getTodos());
     <BaseSpinner v-if="loading" />
     <div v-else>
       <div class="flex items-center justify-between pb-4">
-        <SearchTodos />
+        <SearchTodos v-on:search="handleSearch" />
         <button
           @click="
             () => {
@@ -91,7 +102,7 @@ onMounted(() => getTodos());
       </div>
       <ul class="m-0 list-none p-0">
         <SingleTodo
-          v-for="todo in todos"
+          v-for="todo in filteredTodos"
           :key="todo._id"
           :todo="todo"
           v-on:delete-todo="handleDeleteTodo"

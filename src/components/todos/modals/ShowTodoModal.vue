@@ -3,12 +3,7 @@ import CommentsPage from '../../comments/CommentsPage.vue';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
-  // initialTitle: String,
-  // initialText: String,
-  // createdAt: String,
-  // updatedAt: String,
-  // completedAt: String,
-  // isCompleted: String,
+  onShow: Boolean,
   todo: Object,
 });
 let expanded = ref(false);
@@ -29,13 +24,15 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    v-if="show"
+    v-if="onShow"
+    @click.self="$emit('cancel')"
     class="absolute inset-0 flex h-screen w-screen flex-col items-center justify-center bg-gray-500 md:flex-row md:gap-4"
   >
     <div
       class="relative z-[1000] flex h-[60%] w-screen min-w-[384px] flex-col items-center justify-center gap-3 bg-gray-200 p-5 shadow-md md:h-[560px] md:w-[90%] md:max-w-[500px] md:rounded-lg"
     >
       <button
+        @click="$emit('cancel')"
         class="absolute left-0 top-0 mr-3 cursor-pointer overflow-hidden rounded-lg border-none p-3 text-red-500 transition-all duration-500 ease-in-out hover:bg-gray-300 hover:text-red-700"
         n
       >
