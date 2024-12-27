@@ -14,16 +14,14 @@ const authToken = inject('authToken');
 const showAddTodo = ref(false);
 
 const sortedTodos = computed(() => {
-  // return filteredTodos.value.sort((a, b) => {
-  //   if (a.completed === b.completed) {
-  //     return 0;
-  //   }
-  //   return a.completed ? 1 : -1;
-  // });
-  return filteredTodos.value.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  return filteredTodos.value.sort((a, b) => {
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
 });
+
 function handleAddTodo(newTodo) {
   filteredTodos.value.push(newTodo);
 }
