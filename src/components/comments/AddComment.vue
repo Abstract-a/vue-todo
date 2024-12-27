@@ -1,12 +1,45 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
+import axios from 'axios';
+
+const props = defineProps({
+  id: String,
+});
+const emit = defineEmits(['addComment']);
 
 let loading = ref(false);
 let comment = ref('');
+const authToken = inject('authToken');
+// console.log(authToken._value);
+
+async function handleSubmit() {
+  loading.value = true;
+
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/api/comments`,
+      {
+        todo: props.id,
+        comment: comment.value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken._value}`,
+        },
+      }
+    );
+    emit('addComment', response.data);
+    comment.value = '';
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 <template>
   <div class="flex w-full gap-4">
-    <form class="flex w-full">
+    <form @submit.prevent="handleSubmit" class="flex w-full">
       <input
         type="text"
         placeholder="Write a comment"
@@ -17,7 +50,7 @@ let comment = ref('');
       />
       <button
         type="submit"
-        disabled="loading"
+        :disabled="loading"
         class="m-3 cursor-pointer rounded-lg border-none bg-green-500 px-6 text-white transition-all duration-500 ease-in-out hover:bg-green-600 hover:opacity-90"
       >
         {{ loading ? 'Saving' : 'Save' }}

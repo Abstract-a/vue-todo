@@ -1,7 +1,15 @@
 <script setup>
 import { ref } from 'vue';
-
+const emit = defineEmits(['search']);
 let searchTerm = ref('');
+function handleChange(e) {
+  searchTerm.value = e.target.value;
+
+  emit('search', searchTerm.value);
+}
+// function handleInputChange(e) {
+// searchTerm.value = e.target.value
+// }
 </script>
 
 <template>
@@ -9,7 +17,8 @@ let searchTerm = ref('');
     <input
       class="w-full rounded-md p-3"
       type="text"
-      v-model="searchTerm"
+      :value="searchTerm"
+      @input="handleChange"
       placeholder="Search todos..."
     />
   </div>

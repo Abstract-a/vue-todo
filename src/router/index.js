@@ -10,6 +10,14 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: TodosView,
+      beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          next();
+        } else {
+          next('/signin');
+        }
+      },
     },
     {
       path: '/signin',
