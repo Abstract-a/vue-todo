@@ -3,7 +3,6 @@ import SignUpView from '../views/SignUpView.vue';
 import SignInView from '../views/SignInView.vue';
 import TodosView from '../views/TodosView.vue';
 
-let token = localStorage.getItem('authToken');
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -12,6 +11,7 @@ const router = createRouter({
       name: 'home',
       component: TodosView,
       beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('authToken');
         if (token) {
           next();
         } else {
