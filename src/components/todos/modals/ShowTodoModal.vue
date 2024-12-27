@@ -67,6 +67,7 @@ onBeforeUnmount(() => {
             'mt-2 inline-block cursor-pointer text-blue-500',
             props.todo.text.length < 260 ? 'hidden' : '',
           ]"
+          @click="expanded = !expanded"
         >
           {{ expanded ? 'Show less' : 'Show more' }}
         </span>
