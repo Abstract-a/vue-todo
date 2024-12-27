@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios';
 import DeleteCommentModal from './modals/DeleteCommentModal.vue';
-import { ref, inject } from 'vue';
+import { ref, inject, computed } from 'vue';
 const props = defineProps({
   comment: Object,
 });
@@ -12,6 +12,18 @@ let loading = ref(false);
 let editing = ref(false);
 const authToken = inject('authToken');
 const emit = defineEmits(['deleteComment', 'updateComment']);
+
+const creationDate = computed(() => {
+  const dateObj = new Date(props.comment.createdAt);
+  return new Intl.DateTimeFormat('en-Us', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  }).format(dateObj);
+});
 
 async function handleDelete() {
   try {
@@ -73,7 +85,7 @@ async function handleEdit() {
       </h3>
     </div>
     <div class="mx-4 flex items-center justify-start gap-1">
-      <p class="text-xs text-gray-500">{{ props.comment.createdAt }}</p>
+      <p class="text-xs text-gray-500">{{ creationDate }}</p>
       •
       <button
         v-if="editing"

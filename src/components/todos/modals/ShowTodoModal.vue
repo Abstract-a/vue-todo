@@ -1,6 +1,6 @@
 <script setup>
 import CommentsPage from '../../comments/CommentsPage.vue';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 
 const props = defineProps({
   todo: Object,
@@ -8,6 +8,30 @@ const props = defineProps({
 const emit = defineEmits(['cancel']);
 
 let expanded = ref(false);
+
+const creationDate = computed(() => {
+  const dateObj = new Date(props.todo.createdAt);
+  return new Intl.DateTimeFormat('en-Us', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  }).format(dateObj);
+});
+
+const updateDate = computed(() => {
+  const dateObj = new Date(props.todo.updatedAt);
+  return new Intl.DateTimeFormat('en-Us', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  }).format(dateObj);
+});
 
 function handleKeyDown(e) {
   if (e.key === 'Escape') {
@@ -87,11 +111,11 @@ onBeforeUnmount(() => {
       <div class="flex w-full justify-between gap-4">
         <div class="flex flex-col gap-1">
           <p class="text-xs text-gray-500">date of creation</p>
-          <p class="text-xs text-gray-500">{{ props.todo.createdAt }}</p>
+          <p class="text-xs text-gray-500">{{ creationDate }}</p>
         </div>
         <div class="flex flex-col gap-1">
           <p class="text-xs text-gray-500">latest update</p>
-          <p class="text-xs text-gray-500">{{ props.todo.updatedAt }}</p>
+          <p class="text-xs text-gray-500">{{ updateDate }}</p>
         </div>
         <!-- <div v-if="Boolean(props.todo.completed)" class="flex flex-col gap-1">
           <p class="text-xs text-gray-500">completed at</p>
