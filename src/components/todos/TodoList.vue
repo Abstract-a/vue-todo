@@ -102,9 +102,9 @@ onMounted(() => getTodos());
         />
       </ul>
       <AddTodo
-        :onShow="showAddTodo"
+        v-if="showAddTodo"
         @add-todo="handleAddTodo"
-        @cancel="onCancel"
+        @cancel="showAddTodo = false"
       />
     </div>
   </div>

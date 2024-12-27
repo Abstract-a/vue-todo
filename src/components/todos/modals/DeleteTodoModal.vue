@@ -4,7 +4,6 @@ import { ref, onMounted, inject, onBeforeUnmount } from 'vue';
 const emit = defineEmits(['cancel', 'confirm']);
 const props = defineProps({
   id: String,
-  onShow: Boolean,
 });
 
 function handleKeyDown(e) {
@@ -20,7 +19,7 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div v-if="onShow" class="backdrop" @click.self="$emit('cancel')">
+  <div class="backdrop" @click.self="$emit('cancel')">
     <div
       class="fixed left-[50%] top-[50%] z-[1000] flex w-[90%] max-w-96 -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-lg bg-gray-200 p-5 shadow-md"
     >

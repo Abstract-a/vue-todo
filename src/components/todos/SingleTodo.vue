@@ -9,7 +9,6 @@ const props = defineProps({
   todo: Object,
 });
 const emit = defineEmits(['deleteTodo']);
-const updateDate = ref(props.todo.updatedAt);
 const authToken = inject('authToken');
 const confirmDeletePopup = ref(false);
 const confirmShowPopup = ref(false);
@@ -32,15 +31,6 @@ async function handleDelete() {
   }
 }
 
-function handleCancelDelete() {
-  confirmDeletePopup.value = false;
-}
-function handleCancelShow() {
-  confirmShowPopup.value = false;
-}
-function handleCancelUpdate() {
-  confirmUpdatePopup.value = false;
-}
 async function handleCompleted(e) {
   try {
     const response = await axios.put(
@@ -102,7 +92,7 @@ async function handleCompleted(e) {
         <div class="flex gap-3">
           <h3
             :class="[
-              'cursor-pointer text-left text-[14px] font-bold md:text-lg',
+              ' text-left cursor-default text-[14px] font-bold md:text-lg',
               props.todo.completed
                 ? 'italic text-gray-600 line-through opacity-70'
                 : '',
@@ -150,20 +140,20 @@ async function handleCompleted(e) {
       </div>
     </li>
     <DeleteTodoModal
-      @cancel="handleCancelDelete"
-      :onShow="confirmDeletePopup"
+      v-if="confirmDeletePopup"
+      @cancel="confirmDeletePopup = false"
       :id="props.todo._id"
       @confirm="handleDelete"
     />
     <UpdateTodoModal
       :todo="todo"
-      @cancel="handleCancelUpdate"
-      :onShow="confirmUpdatePopup"
+      v-if="confirmUpdatePopup"
+      @cancel="confirmUpdatePopup = false"
     />
     <ShowTodoModal
       :todo="todo"
-      :onShow="confirmShowPopup"
-      @cancel="handleCancelShow"
+      v-if="confirmShowPopup"
+      @cancel="confirmShowPopup = false"
     />
   </div>
 </template>

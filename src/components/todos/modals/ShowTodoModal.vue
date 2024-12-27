@@ -3,7 +3,6 @@ import CommentsPage from '../../comments/CommentsPage.vue';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
-  onShow: Boolean,
   todo: Object,
 });
 const emit = defineEmits(['cancel']);
@@ -26,7 +25,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    v-if="onShow"
     @click.self="
       () => {
         $emit('cancel');
@@ -95,10 +93,10 @@ onBeforeUnmount(() => {
           <p class="text-xs text-gray-500">latest update</p>
           <p class="text-xs text-gray-500">{{ props.todo.updatedAt }}</p>
         </div>
-        <div v-if="Boolean(props.todo.isCompleted)" class="flex flex-col gap-1">
-          <p class="text-xs text-gray-500">complete at</p>
-          <p class="text-xs text-gray-500">{{ props.todo.completedAt }}</p>
-        </div>
+        <!-- <div v-if="Boolean(props.todo.completed)" class="flex flex-col gap-1">
+          <p class="text-xs text-gray-500">completed at</p>
+          <p class="text-xs text-gray-500">{{ props.todo.updatedAt }}</p>
+        </div> -->
       </div>
     </div>
     <CommentsPage :id="props.todo._id" />

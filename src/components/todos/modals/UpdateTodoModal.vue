@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const props = defineProps({
   todo: Object,
-  onShow: Boolean,
 });
 
 let loading = ref(false);
@@ -50,12 +49,14 @@ async function handleSubmit(e) {
 </script>
 
 <template>
-  <div v-if="onShow" class="backdrop" @click.self="$emit('cancel')">
+  <div class="backdrop" @click.self="$emit('cancel')">
     <div
       class="fixed left-[50%] top-[50%] z-[1000] mt-12 flex h-screen w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 bg-[#d6d6d6] p-5 shadow-md sm:h-auto sm:w-[90%] sm:max-w-[500px] sm:rounded-lg"
     >
       <form @submit.prevent="handleSubmit">
-        <label class="text-[20px] font-bold tracking-wider" for="title"
+        <label
+          class="text-[20px] w-full pb-2 block text-left font-bold tracking-wider"
+          for="title"
           >Title</label
         >
         <input
@@ -65,7 +66,9 @@ async function handleSubmit(e) {
           v-model="props.todo.title"
           required
         />
-        <label class="text-[20px] font-bold tracking-wider" for="text"
+        <label
+          class="text-[20px] font-bold block pb-2 w-full text-left tracking-wider"
+          for="text"
           >Description</label
         >
         <textarea
